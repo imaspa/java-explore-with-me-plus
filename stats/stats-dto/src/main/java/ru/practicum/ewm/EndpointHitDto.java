@@ -15,15 +15,15 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EndpointHitDto {
-    @NotBlank
+    @NotBlank(message = "Идентификатор сервиса не может быть пустым")
     private String app;
-    @NotBlank
+    @NotBlank(message = "URI сервиса не может быть пустым")
     private String uri;
-    @NotBlank
+    @NotBlank(message = "IP адрес не может быть пустым")
     @Pattern(regexp = "^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}$|^([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$",
             message = "Некорректный IP адрес")
     private String ip;
-    @NotBlank
+    @NotBlank(message = "Время запроса не может быть пустым")
     @JsonFormat(shape = JsonFormat.Shape.STRING,
             pattern = "yyyy-MM-dd HH:mm:ss",
             timezone = "Europe/Moscow")
