@@ -12,7 +12,7 @@ import java.util.List;
 
 
 @Repository
-public interface EndpointHitRepository  extends JpaRepository<EndpointHit, Long> {
+public interface EndpointHitRepository extends JpaRepository<EndpointHit, Long> {
 
     @Query("SELECT new ru.practicum.ewm.ViewStatsDto(eh.app, eh.uri, COUNT(eh.ip)) " +
             "FROM EndpointHit eh " +

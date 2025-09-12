@@ -11,7 +11,8 @@ public class DateRangeValidator implements ConstraintValidator<DateRange, DateRa
 
     @Override
     public void initialize(DateRange annotation) {
-        this.defaultMessage = annotation.message();     }
+        this.defaultMessage = annotation.message();
+    }
 
     @Override
     public boolean isValid(DateRangeAware value, ConstraintValidatorContext context) {
