@@ -15,7 +15,7 @@ spring:
       path: /h2-console
 
   jpa:
-    hibernate:
+    #    hibernate:
     #      ddl-auto: create-drop
 
     properties:
