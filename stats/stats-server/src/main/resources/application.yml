@@ -4,6 +4,17 @@ server:
 spring:
   application:
     name: stats-server
+
+  mvc:
+    format:
+      date: yyyy-MM-dd
+      date-time: yyyy-MM-dd HH:mm:ss
+      time: HH:mm:ss
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: Europe/Moscow
+    locale: ru_RU
+
   sql:
     init:
       mode: always
