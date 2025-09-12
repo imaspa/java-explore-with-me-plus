@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import ru.practicum.ewm.EndpointHitDto;
 import ru.practicum.ewm.ViewStatsDto;
@@ -22,6 +23,7 @@ public class EndpointHitService {
     private final EndpointHitMapper mapper;
     private final EndpointHitRepository repository;
 
+    @Transactional
     public void createHit(@NotNull(message = "Данные не получены или пустые") @Valid EndpointHitDto dto) {
         log.info("Создать запись hit (старт). uri: {}", dto.getUri());
         var entity = mapper.toEntity(dto);
@@ -29,6 +31,7 @@ public class EndpointHitService {
         log.info("Создать запись hit (стоп). uri: {}", dto.getUri());
     }
 
+    @Transactional(readOnly = true)
     public List<ViewStatsDto> findStats(@Valid StatsFilter filter) {
         log.info("Получить запись статистки (старт). filter: {}", filter);
         var result = filter.getUnique() ? repository.findStatsByUnique(filter) : repository.findStatsByNonUnique(filter);
