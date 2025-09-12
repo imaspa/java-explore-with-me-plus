@@ -23,11 +23,16 @@ public class EndpointHitService {
     private final EndpointHitRepository repository;
 
     public void createHit(@NotNull(message = "Данные не получены или пустые") @Valid EndpointHitDto dto) {
+        log.info("Создать запись hit (старт). uri: {}", dto.getUri());
         var entity = mapper.toEntity(dto);
         repository.save(entity);
+        log.info("Создать запись hit (стоп). uri: {}", dto.getUri());
     }
 
     public List<ViewStatsDto> findStats(@Valid StatsFilter filter) {
-        return filter.getUnique() ? repository.findStatsByUnique(filter) : repository.findStatsByNonUnique(filter);
+        log.info("Получить запись статистки (старт). filter: {}", filter);
+        var result = filter.getUnique() ? repository.findStatsByUnique(filter) : repository.findStatsByNonUnique(filter);
+        log.info("Получить запись статистки (стоп). filter: {}; записей в ответе: {}", filter, result.size());
+        return result;
     }
 }
