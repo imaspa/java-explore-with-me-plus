@@ -1,4 +1,4 @@
-package ru.practicum.ewm;
+package ru.practicum.ewm.client;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriComponentsBuilder;
+import ru.practicum.ewm.EndpointHitDto;
+import ru.practicum.ewm.ViewStatsDto;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 
@@ -27,7 +27,7 @@ public class StatsClient {
         log.info("Отправка запроса saveHit: url={}, body={}", url, hitDto);
 
         restClient.post()
-                .uri(statsServerUrl + "/hit")
+                .uri("/hit")
                 .body(hitDto)
                 .retrieve()
                 .toBodilessEntity();
@@ -36,16 +36,17 @@ public class StatsClient {
     }
 
     public List<ViewStatsDto> getStats(String start, String end, String[] uris, boolean unique) {
-
         String url = UriComponentsBuilder
-                .fromHttpUrl(statsServerUrl + "/stats")
-                .queryParam("start", URLEncoder.encode(start, StandardCharsets.UTF_8))
-                .queryParam("end", URLEncoder.encode(end, StandardCharsets.UTF_8))
+                .fromPath("/stats")
+                .queryParam("start", start)
+                .queryParam("end", end)
                 .queryParam("uris", (Object[]) uris)
                 .queryParam("unique", unique)
+                .build(false)
                 .toUriString();
 
-        log.info("Отправка запроса getStats: url={}", url);
+        String logUrl = url.replace(" ", "%20");
+        log.info("Отправка запроса getStats: url={}", statsServerUrl + logUrl);
 
         List<ViewStatsDto> stats = Arrays.asList(
                 restClient.get()
