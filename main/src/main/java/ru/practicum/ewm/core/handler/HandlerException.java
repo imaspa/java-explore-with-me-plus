@@ -58,7 +58,7 @@ public class HandlerException {
         String errorMessage = exception.getBindingResult()
                 .getFieldErrors()
                 .stream()
-                .map(error -> "%s: %s" .formatted(error.getField(), error.getDefaultMessage()))
+                .map(error -> "%s: %s".formatted(error.getField(), error.getDefaultMessage()))
                 .collect(Collectors.joining(", "));
         log.error(errorMessage);
         return ResponseEntity

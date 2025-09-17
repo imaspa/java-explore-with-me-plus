@@ -10,6 +10,7 @@ public interface CategoryService {
     CategoryDto create(NewCategoryDto newCategoryDto);
 
     CategoryDto update(Long catId, NewCategoryDto newCategoryDto);
+
     void delete(Long categoryId);
 
     List<CategoryDto> findCategories(Pageable pageable);
