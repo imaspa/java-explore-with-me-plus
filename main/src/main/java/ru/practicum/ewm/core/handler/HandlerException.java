@@ -16,23 +16,23 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class HandlerException {
 
-        @ExceptionHandler(NotFoundException.class)
-        public ResponseEntity<ErrorMessage> notFoundException(NotFoundException exception) {
-            log.error(exception.getMessage(), exception);
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(new ErrorMessage(exception.getMessage()));
-        }
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ErrorMessage> notFoundException(NotFoundException exception) {
+        log.error(exception.getMessage(), exception);
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(new ErrorMessage(exception.getMessage()));
+    }
 
-/*
-        @ExceptionHandler(ConditionsException.class)
-        public ResponseEntity<ErrorMessage> conditionsException(ConditionsException exception) {
-            log.error(exception.getMessage(), exception);
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(new ErrorMessage(exception.getMessage()));
-        }
-    */
+    /*
+            @ExceptionHandler(ConditionsException.class)
+            public ResponseEntity<ErrorMessage> conditionsException(ConditionsException exception) {
+                log.error(exception.getMessage(), exception);
+                return ResponseEntity
+                        .status(HttpStatus.BAD_REQUEST)
+                        .body(new ErrorMessage(exception.getMessage()));
+            }
+        */
     @ExceptionHandler(ValidateException.class)
     public ResponseEntity<ErrorMessage> conflictException(RuntimeException exception) {
         log.error(exception.getMessage(), exception);

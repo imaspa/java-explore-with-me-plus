@@ -37,9 +37,13 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional
     public CategoryDto update(Long catId, NewCategoryDto newCategoryDto) {
-        checkCategoryOrThrow(newCategoryDto.getName());
         Category category = repository.findById(catId)
                 .orElseThrow(() -> new NotFoundException("Категория с id = " + catId + " не найдена"));
+        if (category.getName().equals(newCategoryDto.getName())) {
+            log.info("Название категории не изменилось");
+            return mapper.toDto(category);
+        }
+        checkCategoryOrThrow(newCategoryDto.getName());
         category.setName(newCategoryDto.getName());
         category = repository.save(category);
         log.info("Изменение категории OK");
@@ -58,7 +62,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<CategoryDto> findCategories(Pageable pageable) {
-        return repository.findAll().stream()
+        return repository.findAll(pageable).stream()
                 .map(mapper::toDto).toList();
     }
 

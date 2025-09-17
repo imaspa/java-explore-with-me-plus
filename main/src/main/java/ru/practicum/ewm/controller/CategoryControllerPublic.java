@@ -5,18 +5,18 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.ewm.dto.category.CategoryDto;
 import ru.practicum.ewm.service.category.CategoryService;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping(path = "/categories")
 @RequiredArgsConstructor
 @Slf4j
@@ -26,7 +26,7 @@ public class CategoryControllerPublic {
 
     @GetMapping
     public List<CategoryDto> findCategories(@RequestParam(name = "from", defaultValue = "0") int from,
-                                  @RequestParam(name = "size", defaultValue = "10") int size) {
+                                            @RequestParam(name = "size", defaultValue = "10") int size) {
         log.info("Поиск категорий: from = {}, size = {}", from, size);
         Pageable pageable = PageRequest.of(from, size);
         return categoryService.findCategories(pageable);

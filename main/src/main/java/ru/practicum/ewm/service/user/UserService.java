@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface UserService {
     UserDto create(NewUserDto userDto);
+
     void delete(Long userId);
 
     List<UserDto> findUsers(List<Long> ids, Pageable pageable);
