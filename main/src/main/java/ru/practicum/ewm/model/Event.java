@@ -60,7 +60,7 @@ public class Event {
     @Column(nullable = false)
     private Boolean paid;
 
-    @Column(name = "limit", nullable = false)
+    @Column(name = "participant_limit", nullable = false)
     private Long participantLimit;
 
     @Column(name = "published")
