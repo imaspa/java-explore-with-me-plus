@@ -2,56 +2,53 @@ package ru.practicum.ewm.dto.event;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Future;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.lang.Nullable;
+import ru.practicum.ewm.model.EventStateAction;
 
 import java.time.LocalDateTime;
 
 @Data
-@Builder
+@Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class NewEventDto {
+public class UpdateEventDto {
+    private Long id;
+    private Long userId;
 
-    @NotBlank(message = "Не заполнено поле annotation")
+    @Nullable
     @Size(min = 20, max = 2000, message = "Количество символов в annotation от 20 до 2000")
     private String annotation;
 
-    @NotNull
     private Long category;
 
-    @NotBlank(message = "Не заполнено поле description")
+    @Nullable
     @Size(min = 20, max = 7000, message = "Количество символов в description от 20 до 7000")
     private String description;
 
-    @NotNull(message = "Не заполнено поле eventDate")
+    @Nullable
     @JsonFormat(shape = JsonFormat.Shape.STRING,
             pattern = "yyyy-MM-dd HH:mm:ss",
             timezone = "Europe/Moscow")
     @Future(message = "eventDate не может быть раньше текущего времени")
     private LocalDateTime eventDate;
 
-    @NotNull
     private LocationDto location;
+    private Boolean paid;
 
-    @Builder.Default
-    private Boolean paid = false;
-
-    @Builder.Default
+    @Nullable
     @PositiveOrZero(message = "participantLimit >= 0")
-    private Long participantLimit = 0L;
+    private Long participantLimit;
 
-    @Builder.Default
-    private Boolean requestModeration = true;
+    private Boolean requestModeration;
+    private EventStateAction stateAction;
 
-    @NotBlank(message = "Не заполнено поле title")
+    @Nullable
     @Size(min = 3, max = 120, message = "Количество символов в title от 3 до 120")
     private String title;
-
 }
