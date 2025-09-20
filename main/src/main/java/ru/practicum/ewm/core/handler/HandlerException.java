@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.practicum.ewm.core.exception.NotFoundException;
 import ru.practicum.ewm.core.exception.ValidateException;
+import ru.practicum.ewm.core.exception.WrongRequestException;
 
 import java.util.stream.Collectors;
 
@@ -38,6 +39,14 @@ public class HandlerException {
         log.error(exception.getMessage(), exception);
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
+                .body(new ErrorMessage(exception.getMessage()));
+    }
+
+    @ExceptionHandler(WrongRequestException.class)
+    public ResponseEntity<ErrorMessage> handleBadRequestException(RuntimeException exception) {
+        log.error(exception.getMessage(), exception);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorMessage(exception.getMessage()));
     }
 

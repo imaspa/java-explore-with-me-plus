@@ -8,13 +8,17 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import ru.practicum.ewm.core.exception.NotFoundException;
 import ru.practicum.ewm.core.exception.ValidateException;
+import ru.practicum.ewm.core.exception.WrongRequestException;
 import ru.practicum.ewm.dto.category.CategoryDto;
 import ru.practicum.ewm.dto.category.NewCategoryDto;
 import ru.practicum.ewm.mapper.CategoryMapper;
 import ru.practicum.ewm.model.Category;
+import ru.practicum.ewm.model.Event;
 import ru.practicum.ewm.repository.CategoryRepository;
+import ru.practicum.ewm.repository.EventRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -24,6 +28,7 @@ import java.util.List;
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository repository;
     private final CategoryMapper mapper;
+    private final EventRepository eventRepository;
 
     @Override
     @Transactional
@@ -53,9 +58,12 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional
     public void delete(Long catId) {
-        //TODO с категорией не должно быть связано ни одного события (ValidateException 409)
         Category category = repository.findById(catId)
                 .orElseThrow(() -> new NotFoundException("Категория с id = " + catId + " не найдена"));
+        Optional<Event> eventOpt = eventRepository.findFirstByCategoryId(catId);
+        if (eventOpt.isPresent()) {
+            throw new ValidateException("Категория с id = " + catId + " используется");
+        }
         repository.delete(category);
         log.info("Категория {} удалена", catId);
     }

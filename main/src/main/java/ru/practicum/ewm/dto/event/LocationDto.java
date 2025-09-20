@@ -1,6 +1,6 @@
 package ru.practicum.ewm.dto.event;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LocationDto {
-    @NotBlank
+    @NotNull
     private Float lat;
 
-    @NotBlank
+    @NotNull
     private Float lon;
 }
