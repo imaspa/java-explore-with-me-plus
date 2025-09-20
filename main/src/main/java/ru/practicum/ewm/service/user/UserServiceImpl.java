@@ -47,15 +47,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDto> findUsers(List<Long> ids, Pageable pageable) {
         if (ids == null || ids.isEmpty()) {
-            return userRepository.findAll(pageable)
-                    .stream()
-                    .map(mapper::toUserDto)
-                    .toList();
+            return userRepository.findAll(pageable).stream()
+                    .map(mapper::toUserDto).toList();
         } else {
-            return userRepository.findAllById(ids)
-                    .stream()
-                    .map(mapper::toUserDto)
-                    .toList();
+            return userRepository.findAllById(ids).stream()
+                    .map(mapper::toUserDto).toList();
         }
     }
 

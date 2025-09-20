@@ -22,5 +22,3 @@ spring:
       hibernate.format_sql: true
       hibernate.dialect: org.hibernate.dialect.H2Dialect
 
-stats-server:
-  url: http://localhost:9090

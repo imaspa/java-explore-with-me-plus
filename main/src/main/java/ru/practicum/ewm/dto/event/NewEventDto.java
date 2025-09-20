@@ -3,13 +3,13 @@ package ru.practicum.ewm.dto.event;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.practicum.ewm.model.Category;
 
 import java.time.LocalDateTime;
 
@@ -23,31 +23,28 @@ public class NewEventDto {
     @Size(min = 20, max = 2000, message = "Количество символов в annotation от 20 до 2000")
     private String annotation;
 
-    @NotNull
-    private Long category;
+    @NotBlank
+    private Category category;
 
     @NotBlank(message = "Не заполнено поле description")
     @Size(min = 20, max = 7000, message = "Количество символов в description от 20 до 7000")
     private String description;
 
-    @NotNull(message = "Не заполнено поле eventDate")
+    @NotBlank(message = "Не заполнено поле eventDate")
     @JsonFormat(shape = JsonFormat.Shape.STRING,
             pattern = "yyyy-MM-dd HH:mm:ss",
             timezone = "Europe/Moscow")
     @Future(message = "eventDate не может быть раньше текущего времени")
     private LocalDateTime eventDate;
 
-    @NotNull
+    @NotBlank
     private LocationDto location;
 
-    @Builder.Default
     private Boolean paid = false;
 
-    @Builder.Default
     @PositiveOrZero(message = "participantLimit >= 0")
     private Long participantLimit = 0L;
 
-    @Builder.Default
     private Boolean requestModeration = true;
 
     @NotBlank(message = "Не заполнено поле title")
