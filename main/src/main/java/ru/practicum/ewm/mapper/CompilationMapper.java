@@ -1,20 +1,39 @@
 package ru.practicum.ewm.mapper;
 
+import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 import ru.practicum.ewm.core.config.CommonMapperConfiguration;
-import ru.practicum.ewm.dto.compilation.CompilationDto;
-import ru.practicum.ewm.dto.compilation.NewCompilationDto;
+import ru.practicum.ewm.dto.compilation.CompilationFullDto;
+import ru.practicum.ewm.dto.compilation.CompilationUpdateDto;
 import ru.practicum.ewm.model.Compilation;
 import ru.practicum.ewm.model.Event;
 
 import java.util.Set;
 
-@Mapper(config = CommonMapperConfiguration.class, uses = {EventMapper.class}) //проверить
+@Mapper(config = CommonMapperConfiguration.class, uses = {EventMapperOld.class}) //проверить
 public interface CompilationMapper {
     @Mapping(target = "events", ignore = true)
-    Compilation toEntity(NewCompilationDto dto, Set<Event> events);
+    Compilation toEntity(CompilationUpdateDto dto, Set<Event> events);
 
-    CompilationDto toDto(Compilation entity);
+    //Compilation toEntityUpdate(CompilationUpdateDto dto);
+
+    Compilation toEntity(CompilationFullDto dto);
+
+    CompilationFullDto toFullDto(Compilation entity);
+
+    CompilationFullDto toFoolDto(Compilation entity);
+
+//    CompilationUpdateDto toUpdateDto(Compilation entity);
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "events", source = "events")
+    @Mapping(target = "title", source = "dto.events")
+    @Mapping(target = "pinned", source = "dto.pinned")
+    Compilation toEntityGeneral(@MappingTarget Compilation entity, CompilationUpdateDto dto, Set<Event> events);
+
 }
 

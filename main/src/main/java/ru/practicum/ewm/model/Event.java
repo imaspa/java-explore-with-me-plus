@@ -13,18 +13,17 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import ru.practicum.ewm.constant.EventState;
 
 import java.time.LocalDateTime;
 
 
 @Entity
 @Table(name = "events")
+@Data
 @Builder
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Event {

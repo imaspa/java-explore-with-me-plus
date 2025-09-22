@@ -6,6 +6,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import ru.practicum.ewm.constant.EventState;
+import ru.practicum.ewm.constant.RequestStatus;
 import ru.practicum.ewm.core.exception.ValidateException;
 import ru.practicum.ewm.dto.request.EventRequestStatusUpdateRequest;
 import ru.practicum.ewm.dto.request.EventRequestStatusUpdateResult;
@@ -15,6 +17,7 @@ import ru.practicum.ewm.model.*;
 import ru.practicum.ewm.repository.EventRepository;
 import ru.practicum.ewm.repository.RequestRepository;
 import ru.practicum.ewm.repository.UserRepository;
+import ru.practicum.ewm.service.RequestService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -42,7 +45,7 @@ class RequestServiceImplTest {
     private RequestMapper mapper;
 
     @InjectMocks
-    private RequestServiceImpl requestService;
+    private RequestService requestService;
 
     private User user;
 

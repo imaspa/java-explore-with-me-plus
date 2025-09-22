@@ -7,8 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import ru.practicum.ewm.core.exception.ConditionsException;
+import ru.practicum.ewm.core.exception.ConflictException;
 import ru.practicum.ewm.core.exception.NotFoundException;
-import ru.practicum.ewm.core.exception.ValidateException;
 
 import java.util.stream.Collectors;
 
@@ -24,22 +25,23 @@ public class HandlerException {
                 .body(new ErrorMessage(exception.getMessage()));
     }
 
-    /*
-            @ExceptionHandler(ConditionsException.class)
-            public ResponseEntity<ErrorMessage> conditionsException(ConditionsException exception) {
-                log.error(exception.getMessage(), exception);
-                return ResponseEntity
-                        .status(HttpStatus.BAD_REQUEST)
-                        .body(new ErrorMessage(exception.getMessage()));
-            }
-        */
-    @ExceptionHandler(ValidateException.class)
-    public ResponseEntity<ErrorMessage> conflictException(RuntimeException exception) {
+
+    @ExceptionHandler(ConditionsException.class)
+    public ResponseEntity<ErrorMessage> conditionsException(ConditionsException exception) {
+        log.error(exception.getMessage(), exception);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorMessage(exception.getMessage()));
+    }
+
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<ErrorMessage> conflictException(ConflictException exception) {
         log.error(exception.getMessage(), exception);
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
                 .body(new ErrorMessage(exception.getMessage()));
     }
+
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ErrorMessage> handleConstraintViolation(ConstraintViolationException ex) {
