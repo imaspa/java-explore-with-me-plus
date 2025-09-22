@@ -11,22 +11,26 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import ru.practicum.ewm.core.exception.NotFoundException;
-import ru.practicum.ewm.dto.compilation.CompilationDto;
-import ru.practicum.ewm.dto.compilation.NewCompilationDto;
-import ru.practicum.ewm.dto.compilation.UpdateCompilationRequest;
+import ru.practicum.ewm.dto.compilation.CompilationFullDto;
+import ru.practicum.ewm.dto.compilation.CompilationUpdateDto;
 import ru.practicum.ewm.mapper.CompilationMapper;
 import ru.practicum.ewm.model.Compilation;
 import ru.practicum.ewm.repository.CompilationRepository;
 import ru.practicum.ewm.repository.EventRepository;
+import ru.practicum.ewm.service.CompilationService;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class CompilationServiceImplTest {
@@ -39,12 +43,12 @@ class CompilationServiceImplTest {
     private CompilationMapper compilationMapper;
 
     @InjectMocks
-    private CompilationServiceImpl compilationService;
+    private CompilationService compilationService;
 
     private Compilation compilation;
-    private CompilationDto compilationDto;
-    private NewCompilationDto newCompilationDto;
-    private UpdateCompilationRequest updateRequest;
+    private CompilationFullDto compilationDto;
+    private CompilationUpdateDto newCompilationDto;
+    private CompilationUpdateDto updateRequest;
 
     @BeforeEach
     void setUp() {
@@ -54,18 +58,18 @@ class CompilationServiceImplTest {
         compilation.setPinned(true);
         compilation.setEvents(new HashSet<>());
 
-        compilationDto = new CompilationDto();
+        compilationDto = new CompilationFullDto();
         compilationDto.setId(1L);
         compilationDto.setTitle("Test");
         compilationDto.setPinned(true);
         compilationDto.setEvents(List.of());
 
-        newCompilationDto = new NewCompilationDto();
+        newCompilationDto = new CompilationUpdateDto();
         newCompilationDto.setTitle("Test");
         newCompilationDto.setPinned(true);
         newCompilationDto.setEvents(List.of());
 
-        updateRequest = new UpdateCompilationRequest();
+        updateRequest = new CompilationUpdateDto();
         updateRequest.setTitle("Updated title");
         updateRequest.setPinned(false);
         updateRequest.setEvents(List.of());
@@ -73,14 +77,14 @@ class CompilationServiceImplTest {
 
     @Test
     void createCompilation() {
-        when(compilationMapper.toEntity(any(NewCompilationDto.class), any()))
+        when(compilationMapper.toEntity(any(CompilationUpdateDto.class), any()))
                 .thenReturn(compilation);
         when(compilationRepository.save(any(Compilation.class)))
                 .thenReturn(compilation);
-        when(compilationMapper.toDto(compilation))
+        when(compilationMapper.toFullDto(compilation))
                 .thenReturn(compilationDto);
 
-        CompilationDto result = compilationService.create(newCompilationDto);
+        CompilationFullDto result = compilationService.create(newCompilationDto);
 
         assertNotNull(result);
         assertEquals("Test", result.getTitle());
@@ -108,9 +112,9 @@ class CompilationServiceImplTest {
     void updateCompilation() {
         when(compilationRepository.findById(1L)).thenReturn(Optional.of(compilation));
         when(compilationRepository.save(any(Compilation.class))).thenReturn(compilation);
-        when(compilationMapper.toDto(any(Compilation.class))).thenReturn(compilationDto);
+        when(compilationMapper.toFullDto(any(Compilation.class))).thenReturn(compilationDto);
 
-        CompilationDto result = compilationService.update(1L, updateRequest);
+        CompilationFullDto result = compilationService.update(1L, updateRequest);
 
         assertEquals("Test", result.getTitle());
         verify(compilationRepository).save(compilation);
@@ -119,9 +123,9 @@ class CompilationServiceImplTest {
     @Test
     void getById() {
         when(compilationRepository.findById(1L)).thenReturn(Optional.of(compilation));
-        when(compilationMapper.toDto(compilation)).thenReturn(compilationDto);
+        when(compilationMapper.toFullDto(compilation)).thenReturn(compilationDto);
 
-        CompilationDto result = compilationService.getById(1L);
+        CompilationFullDto result = compilationMapper.toFullDto(compilationService.findById(1L));
 
         assertNotNull(result);
         assertEquals(1L, result.getId());
@@ -131,9 +135,9 @@ class CompilationServiceImplTest {
     void getAllWhenPinnedNull() {
         Page<Compilation> page = new PageImpl<>(List.of(compilation));
         when(compilationRepository.findAll(any(Pageable.class))).thenReturn(page);
-        when(compilationMapper.toDto(compilation)).thenReturn(compilationDto);
+        when(compilationMapper.toFullDto(compilation)).thenReturn(compilationDto);
 
-        List<CompilationDto> result = compilationService.getAll(null, PageRequest.of(0, 10));
+        List<CompilationFullDto> result = compilationService.find(null, PageRequest.of(0, 10));
 
         assertEquals(1, result.size());
         verify(compilationRepository).findAll(any(Pageable.class));
@@ -143,9 +147,9 @@ class CompilationServiceImplTest {
     void getAllWhenPinnedTrue() {
         Page<Compilation> page = new PageImpl<>(List.of(compilation));
         when(compilationRepository.findAllByPinned(eq(true), any(Pageable.class))).thenReturn(page);
-        when(compilationMapper.toDto(compilation)).thenReturn(compilationDto);
+        when(compilationMapper.toFullDto(compilation)).thenReturn(compilationDto);
 
-        List<CompilationDto> result = compilationService.getAll(true, PageRequest.of(0, 10));
+        List<CompilationFullDto> result = compilationService.find(true, PageRequest.of(0, 10));
 
         assertEquals(1, result.size());
         verify(compilationRepository).findAllByPinned(eq(true), any(Pageable.class));
