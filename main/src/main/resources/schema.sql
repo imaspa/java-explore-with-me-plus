@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS events
     location_id       BIGINT REFERENCES locations (id) ON DELETE CASCADE,
     paid              BOOLEAN                             NOT NULL DEFAULT false,
     participant_limit INTEGER,
-    published         TIMESTAMP WITHOUT TIME ZONE         NOT NULL,
+    published         TIMESTAMP WITHOUT TIME ZONE,
     moderate          BOOLEAN                             NOT NULL DEFAULT true,
     state             VARCHAR(20)                         NOT NULL,
     title             VARCHAR(120)                        NOT NULL,

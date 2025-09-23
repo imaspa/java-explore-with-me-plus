@@ -23,7 +23,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "events")
 @Data
-@Builder
+@Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class Event {

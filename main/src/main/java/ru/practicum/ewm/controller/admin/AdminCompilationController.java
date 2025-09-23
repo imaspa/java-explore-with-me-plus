@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import ru.practicum.ewm.core.exception.ConditionsException;
 import ru.practicum.ewm.dto.compilation.CompilationFullDto;
 import ru.practicum.ewm.dto.compilation.CompilationUpdateDto;
 import ru.practicum.ewm.service.CompilationService;
@@ -25,7 +26,7 @@ public class AdminCompilationController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CompilationFullDto create(@RequestBody CompilationUpdateDto dto) {
+    public CompilationFullDto create(@RequestBody CompilationUpdateDto dto) throws ConditionsException {
         log.info("Добавление новой подборки : {})", dto);
         return service.create(dto);
     }
@@ -38,7 +39,9 @@ public class AdminCompilationController {
     }
 
     @PatchMapping("/{compId}")
-    public CompilationFullDto update(@Positive @PathVariable Long compId, @RequestBody CompilationUpdateDto dto) {
+    public CompilationFullDto update(
+            @Positive @PathVariable Long compId,
+            @RequestBody CompilationUpdateDto dto) throws ConditionsException {
         log.info("Обновление подборки: {} - {})", compId, dto);
         return service.update(compId, dto);
     }

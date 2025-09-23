@@ -3,10 +3,10 @@ package ru.practicum.ewm.core.annotation;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
-public class FutureByValidator implements ConstraintValidator<FutureBy, Instant> {
+public class FutureByValidator implements ConstraintValidator<FutureBy, LocalDateTime> {
 
     private long amount;
     private ChronoUnit unit;
@@ -18,12 +18,12 @@ public class FutureByValidator implements ConstraintValidator<FutureBy, Instant>
     }
 
     @Override
-    public boolean isValid(Instant value, ConstraintValidatorContext context) {
+    public boolean isValid(LocalDateTime value, ConstraintValidatorContext context) {
         if (value == null) {
-            return true; // null обычно считается валидным, если не указано @NotNull
+            return true;
         }
-        Instant now = Instant.now();
-        Instant minFuture = now.plus(amount, unit);
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime minFuture = now.plus(amount, unit);
         return !value.isBefore(minFuture);
     }
 }

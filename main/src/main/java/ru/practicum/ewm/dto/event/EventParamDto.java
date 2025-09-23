@@ -1,5 +1,6 @@
 package ru.practicum.ewm.dto.event;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,11 +17,24 @@ import java.util.List;
 @AllArgsConstructor
 public class EventParamDto {
     private String text;
+
     private List<Long> categories;
+
     private Boolean paid;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING,
+            pattern = "yyyy-MM-dd HH:mm:ss",
+            timezone = "Europe/Moscow")
     private LocalDateTime rangeStart;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING,
+            pattern = "yyyy-MM-dd HH:mm:ss",
+            timezone = "Europe/Moscow")
     private LocalDateTime rangeEnd;
+
     private Boolean onlyAvailable;
+
     private EventSort sort;
+
     private Pageable pageable;
 }

@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import ru.practicum.ewm.core.exception.ConditionsException;
+import ru.practicum.ewm.core.exception.ConflictException;
 import ru.practicum.ewm.dto.request.ParticipationRequestDto;
 import ru.practicum.ewm.service.RequestService;
 
@@ -37,7 +39,7 @@ public class UserRequestController {
     @ResponseStatus(HttpStatus.CREATED)
     public ParticipationRequestDto create(
             @Positive @PathVariable Long userId,
-            @Positive @RequestParam Long eventId) {
+            @RequestParam Long eventId) throws ConditionsException, ConflictException {
         log.info("Создать новую заявку пользователя {}, на мероприятие {}", userId, eventId);
         return service.create(userId, eventId);
     }
@@ -45,7 +47,7 @@ public class UserRequestController {
     @PatchMapping("/{requestId}/cancel")
     public ParticipationRequestDto cancel(
             @Positive @PathVariable Long userId,
-            @Positive @PathVariable Long requestId) {
+            @Positive @PathVariable Long requestId) throws ConditionsException {
         log.info("Отмена заявки {} пользователем {}", requestId, userId);
         return service.cancelRequest(userId, requestId);
     }

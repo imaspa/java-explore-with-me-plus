@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import ru.practicum.ewm.core.interfaceValidation.CreateValidation;
 
 @Data
 @SuperBuilder
@@ -17,10 +18,10 @@ public class CompilationCommonDto {
 
     private Long id;
 
-    @NotBlank(message = "Заголовок обязателен к заполнению")
-    @Size(max = 50, message = "Количество символов заголовка должно быть в диапазоне от 1 до 50")
+    @NotBlank(message = "Заголовок обязателен к заполнению", groups = CreateValidation.class)
+    @Size(max = 50, message = "Количество символов заголовка должно быть в диапазоне от 1 до 50", groups = CreateValidation.class)
     private String title;
 
-    private Boolean pinned;
+    private Boolean pinned = false;
 
 }
