@@ -32,7 +32,7 @@ public class AdminCategoryController {
 
     @DeleteMapping("/{catId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@Positive @PathVariable Long catId) {
+    public void delete(@Positive @PathVariable Long catId) throws ConflictException {
         log.info("Удалить категорию id = {}", catId);
         service.delete(catId);
     }

@@ -1,6 +1,7 @@
+stats-server:
+  url: ${CLIENT_URL}
 server:
   port: 8080
-
 
 spring:
   application:
@@ -19,6 +20,7 @@ spring:
   sql:
     init:
       mode: always
+      schema-locations: classpath:schema.sql
 
   datasource:
     driver-class-name: org.postgresql.Driver

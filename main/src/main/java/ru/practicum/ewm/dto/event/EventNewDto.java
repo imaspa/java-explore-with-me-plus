@@ -63,7 +63,8 @@ public class EventNewDto {
 
     private EventState state = EventState.PENDING;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING,
+            pattern = "yyyy-MM-dd HH:mm:ss",
+            timezone = "Europe/Moscow")
     private LocalDateTime publishedOn = null;
-
-
 }

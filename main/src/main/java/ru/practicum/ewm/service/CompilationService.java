@@ -7,8 +7,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
+import ru.practicum.ewm.core.exception.ConditionsException;
 import ru.practicum.ewm.core.exception.NotFoundException;
-import ru.practicum.ewm.core.exception.ValidateException;
+import ru.practicum.ewm.core.interfaceValidation.CreateValidation;
 import ru.practicum.ewm.dto.compilation.CompilationFullDto;
 import ru.practicum.ewm.dto.compilation.CompilationUpdateDto;
 import ru.practicum.ewm.mapper.CompilationMapper;
@@ -22,10 +23,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Validated
-@Slf4j
 public class CompilationService {
 
     private final CompilationRepository repository;
@@ -35,7 +36,7 @@ public class CompilationService {
 
 
     @Transactional
-    public CompilationFullDto create(@Valid CompilationUpdateDto dto) {
+    public CompilationFullDto create(@Validated(CreateValidation.class) CompilationUpdateDto dto) throws ConditionsException {
         Set<Event> events = new HashSet<>(getUniqueEvents(dto.getEvents()));
         Compilation compilation = repository.save(mapper.toEntity(dto, events));
         log.info("Создана подборка, id = {}", compilation.getId());
@@ -53,7 +54,7 @@ public class CompilationService {
 
 
     @Transactional
-    public CompilationFullDto update(Long compId, @Valid CompilationUpdateDto dto) {
+    public CompilationFullDto update(Long compId, @Valid CompilationUpdateDto dto) throws ConditionsException {
         var compilation = findById(compId);
 
         Set<Event> events = new HashSet<>(getUniqueEvents(dto.getEvents()));
@@ -86,13 +87,13 @@ public class CompilationService {
                 .toList();
     }
 
-    private List<Event> getUniqueEvents(List<Long> eventsByDto) {
+    private List<Event> getUniqueEvents(List<Long> eventsByDto) throws ConditionsException {
         List<Event> events = new ArrayList<>();
         if (eventsByDto != null && !eventsByDto.isEmpty()) {
             Set<Long> unique = new HashSet<>(eventsByDto);
             log.info("Проверка уникальности events");
             if (unique.size() != eventsByDto.size()) {
-                throw new ValidateException("Список событий содержит дубликаты");
+                throw new ConditionsException("Список событий содержит дубликаты");
             }
             log.info("Сбор events для заполнения");
             events = eventRepository.findAllById(eventsByDto);

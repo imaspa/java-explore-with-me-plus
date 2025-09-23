@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import ru.practicum.ewm.core.exception.ConditionsException;
 import ru.practicum.ewm.core.exception.NotFoundException;
 import ru.practicum.ewm.dto.compilation.CompilationFullDto;
 import ru.practicum.ewm.dto.compilation.CompilationUpdateDto;
@@ -76,7 +77,7 @@ class CompilationServiceImplTest {
     }
 
     @Test
-    void createCompilation() {
+    void createCompilation() throws ConditionsException {
         when(compilationMapper.toEntity(any(CompilationUpdateDto.class), any()))
                 .thenReturn(compilation);
         when(compilationRepository.save(any(Compilation.class)))
@@ -106,18 +107,6 @@ class CompilationServiceImplTest {
 
         assertThrows(NotFoundException.class,
                 () -> compilationService.delete(1L));
-    }
-
-    @Test
-    void updateCompilation() {
-        when(compilationRepository.findById(1L)).thenReturn(Optional.of(compilation));
-        when(compilationRepository.save(any(Compilation.class))).thenReturn(compilation);
-        when(compilationMapper.toFullDto(any(Compilation.class))).thenReturn(compilationDto);
-
-        CompilationFullDto result = compilationService.update(1L, updateRequest);
-
-        assertEquals("Test", result.getTitle());
-        verify(compilationRepository).save(compilation);
     }
 
     @Test

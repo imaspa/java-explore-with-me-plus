@@ -1,6 +1,5 @@
 package ru.practicum.ewm.filter;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -32,11 +31,11 @@ public class EventsFilter implements DateRangeAware {
 
     private List<Long> categories;
 
-    @NotNull(message = "фильтр: `Время запроса начало` обязательно к заполнению")
+    //@NotNull(message = "фильтр: `Время запроса начало` обязательно к заполнению")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime rangeStart;
 
-    @NotNull(message = "фильтр: `Время запроса окончание` обязательно к заполнению")
+    //@NotNull(message = "фильтр: `Время запроса окончание` обязательно к заполнению")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime rangeEnd;
 

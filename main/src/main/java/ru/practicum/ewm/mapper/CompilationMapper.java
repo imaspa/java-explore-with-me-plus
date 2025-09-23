@@ -15,7 +15,11 @@ import java.util.Set;
 
 @Mapper(config = CommonMapperConfiguration.class, uses = {EventMapperOld.class}) //проверить
 public interface CompilationMapper {
-    @Mapping(target = "events", ignore = true)
+
+    @BeanMapping(ignoreByDefault = true, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "title", source = "dto.title")
+    @Mapping(target = "pinned", source = "dto.pinned")
+    @Mapping(target = "events", source = "events")
     Compilation toEntity(CompilationUpdateDto dto, Set<Event> events);
 
     //Compilation toEntityUpdate(CompilationUpdateDto dto);
@@ -31,7 +35,7 @@ public interface CompilationMapper {
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "events", source = "events")
-    @Mapping(target = "title", source = "dto.events")
+    @Mapping(target = "title", source = "dto.title")
     @Mapping(target = "pinned", source = "dto.pinned")
     Compilation toEntityGeneral(@MappingTarget Compilation entity, CompilationUpdateDto dto, Set<Event> events);
 

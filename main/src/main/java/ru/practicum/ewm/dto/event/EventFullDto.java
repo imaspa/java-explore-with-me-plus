@@ -21,6 +21,9 @@ public class EventFullDto {
     private CategoryDto category;
     private Long confirmedRequests;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING,
+            pattern = "yyyy-MM-dd HH:mm:ss",
+            timezone = "Europe/Moscow")
     private LocalDateTime createdOn;
 
     private String description;
@@ -35,6 +38,9 @@ public class EventFullDto {
     private Boolean paid;
     private Long participantLimit;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING,
+            pattern = "yyyy-MM-dd HH:mm:ss",
+            timezone = "Europe/Moscow")
     private LocalDateTime publishedOn;
 
     private Boolean requestModeration;

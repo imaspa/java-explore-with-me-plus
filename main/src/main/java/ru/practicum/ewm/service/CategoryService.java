@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import ru.practicum.ewm.core.exception.ConflictException;
 import ru.practicum.ewm.core.exception.NotFoundException;
-import ru.practicum.ewm.core.exception.ValidateException;
 import ru.practicum.ewm.dto.category.CategoryDto;
 import ru.practicum.ewm.mapper.CategoryMapper;
 import ru.practicum.ewm.model.Category;
@@ -43,7 +42,7 @@ public class CategoryService {
     @Transactional
     public CategoryDto update(Long catId, @Valid CategoryDto dto) throws ConflictException {
         var newDto = mapper.updateDto(getEntity(catId), dto);
-        if (isCategoryNameDuplicate(dto)) {
+        if (isCategoryNameDuplicate(newDto)) {
             throw new ConflictException("Категория уже существует");
         }
         var entity = repository.save(mapper.toEntity(newDto));
@@ -52,14 +51,14 @@ public class CategoryService {
     }
 
     @Transactional
-    public void delete(Long catId) {
+    public void delete(Long catId) throws ConflictException {
         if (!categoryIsExist(catId)) {
             throw new NotFoundException("Удаляемая запись не найдена");
         }
 
         Optional<Event> eventOpt = eventRepository.findFirstByCategoryId(catId);
         if (eventOpt.isPresent()) {
-            throw new ValidateException("Категория с id = " + catId + " используется");
+            throw new ConflictException("Категория с id = " + catId + " используется");
         }
         repository.deleteById(catId);
         log.info("Категория {} удалена", catId);

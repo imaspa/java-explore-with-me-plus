@@ -8,7 +8,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.practicum.ewm.constant.EventState;
 import ru.practicum.ewm.constant.RequestStatus;
-import ru.practicum.ewm.core.exception.ValidateException;
+import ru.practicum.ewm.core.exception.ConditionsException;
+import ru.practicum.ewm.core.exception.ConflictException;
 import ru.practicum.ewm.dto.request.EventRequestStatusUpdateRequest;
 import ru.practicum.ewm.dto.request.EventRequestStatusUpdateResult;
 import ru.practicum.ewm.dto.request.ParticipationRequestDto;
@@ -50,7 +51,7 @@ class RequestServiceImplTest {
     private User user;
 
     private Event event;
-    private ParticipationRequest request;
+    private Request request;
 
     @BeforeEach
     void setUp() {
@@ -72,7 +73,7 @@ class RequestServiceImplTest {
                 .participantLimit(5L)
                 .requestModeration(true)
                 .build();
-        request = ParticipationRequest.builder()
+        request = Request.builder()
                 .id(1L)
                 .event(event)
                 .requester(user)
@@ -82,7 +83,7 @@ class RequestServiceImplTest {
     }
 
     @Test
-    void createTest() {
+    void createTest() throws ConditionsException, ConflictException {
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
         when(eventRepository.findById(event.getId())).thenReturn(Optional.of(event));
         when(requestRepository.findByEventIdAndRequesterId(event.getId(), user.getId()))
@@ -93,7 +94,7 @@ class RequestServiceImplTest {
         ParticipationRequestDto dto = requestService.create(user.getId(), event.getId());
 
         assertNotNull(dto);
-        verify(requestRepository).save(any(ParticipationRequest.class));
+        verify(requestRepository).save(any(Request.class));
     }
 
     @Test
@@ -101,7 +102,7 @@ class RequestServiceImplTest {
         when(requestRepository.findByEventIdAndRequesterId(event.getId(), user.getId()))
                 .thenReturn(Optional.of(request));
 
-        assertThrows(ValidateException.class, () ->
+        assertThrows(ConflictException.class, () ->
                 requestService.create(user.getId(), event.getId()));
     }
 
@@ -118,7 +119,7 @@ class RequestServiceImplTest {
     }
 
     @Test
-    void cancelRequestTest() {
+    void cancelRequestTest() throws ConditionsException {
         when(requestRepository.findById(request.getId())).thenReturn(Optional.of(request));
         when(requestRepository.save(any())).thenReturn(request);
         when(mapper.toDto(any())).thenReturn(new ParticipationRequestDto());
@@ -130,7 +131,7 @@ class RequestServiceImplTest {
     }
 
     @Test
-    void getRequestsForEventOwnerTest() {
+    void getRequestsForEventOwnerTest() throws ConditionsException {
         when(eventRepository.findById(event.getId())).thenReturn(Optional.of(event));
         when(requestRepository.findByEventId(event.getId())).thenReturn(List.of(request));
         when(mapper.toDto(any())).thenReturn(new ParticipationRequestDto());
@@ -142,7 +143,7 @@ class RequestServiceImplTest {
     }
 
     @Test
-    void updateRequestStatusConfirmTest() {
+    void updateRequestStatusConfirmTest() throws ConditionsException, ConflictException {
         EventRequestStatusUpdateRequest updateDto =
                 new EventRequestStatusUpdateRequest(List.of(request.getId()), RequestStatus.CONFIRMED);
 
