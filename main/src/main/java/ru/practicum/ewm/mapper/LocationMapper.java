@@ -11,5 +11,4 @@ public interface LocationMapper {
     Location toEntity(EventLocationDto dto);
 
     EventLocationDto toDto(Location entity);
-
 }

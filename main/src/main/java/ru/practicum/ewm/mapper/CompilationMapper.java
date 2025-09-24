@@ -22,15 +22,9 @@ public interface CompilationMapper {
     @Mapping(target = "events", source = "events")
     Compilation toEntity(CompilationUpdateDto dto, Set<Event> events);
 
-    //Compilation toEntityUpdate(CompilationUpdateDto dto);
-
     Compilation toEntity(CompilationFullDto dto);
 
     CompilationFullDto toFullDto(Compilation entity);
-
-    CompilationFullDto toFoolDto(Compilation entity);
-
-//    CompilationUpdateDto toUpdateDto(Compilation entity);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)
@@ -38,6 +32,5 @@ public interface CompilationMapper {
     @Mapping(target = "title", source = "dto.title")
     @Mapping(target = "pinned", source = "dto.pinned")
     Compilation toEntityGeneral(@MappingTarget Compilation entity, CompilationUpdateDto dto, Set<Event> events);
-
 }
 

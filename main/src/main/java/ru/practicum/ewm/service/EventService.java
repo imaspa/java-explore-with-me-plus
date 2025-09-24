@@ -58,10 +58,6 @@ public class EventService {
     private final RequestRepository requestRepository;
     private final StatsService statsService;
 
-    // ========================
-    // CREATE / UPDATE
-    // ========================
-
     @Transactional
     public EventFullDto create(@Valid EventNewDto dto, Long userId) throws ConditionsException {
         User user = getUserOrThrow(userId);
@@ -156,10 +152,6 @@ public class EventService {
 
     }
 
-    // ========================
-    // GET BY ID
-    // ========================
-
     @Transactional(readOnly = true)
     public EventFullDto findByUserIdAndEventId(Long userId, Long eventId) throws ConditionsException {
         if (!userIsExist(userId)) {
@@ -196,10 +188,6 @@ public class EventService {
                 .build();
     }
 
-    // ========================
-    // GET BY USER
-    // ========================
-
     @Transactional(readOnly = true)
     public List<EventShortDto> findByUserId(Long userId, Pageable pageable) throws ConditionsException {
         if (!userIsExist(userId)) {
@@ -215,10 +203,6 @@ public class EventService {
                 ))
                 .toList();
     }
-
-    // ========================
-    // SEARCH (Public & Admin)
-    // ========================
 
     @Transactional(readOnly = true)
     public List<EventShortDto> findPublicEventsWithFilter(@Valid EventsFilter filter, Pageable pageable, HttpServletRequest request) {
@@ -282,20 +266,6 @@ public class EventService {
 
         Map<String, Long> viewsUriMap = statsService.getViewsForUris(uris);
         Stream<Event> eventStream = eventsPage.stream();
-
-//        if (!forAdmin) {
-//            EventSort sort = getEventSort(pageable);
-//            if (EventSort.VIEWS == sort) {
-//                eventStream = eventStream.sorted((e1, e2) -> {
-//                    Long v1 = viewsUriMap.getOrDefault("/events/" + e1.getId(), 0L);
-//                    Long v2 = viewsUriMap.getOrDefault("/events/" + e2.getId(), 0L);
-//                    return v2.compareTo(v1); // по убыванию просмотров
-//                });
-//            } else {
-//                eventStream = eventStream.sorted(Comparator.comparing(Event::getEventDate).reversed());
-//            }
-//        }
-
         List<T> result = eventStream
                 .map(e -> mapper.apply(e, viewsUriMap))
                 .toList();
@@ -303,11 +273,6 @@ public class EventService {
         log.info("Найдено {} событий в режиме {}", result.size(), forAdmin ? "ADMIN" : "PUBLIC");
         return result;
     }
-
-
-    // ========================
-    // HELPERS
-    // ========================
 
     private User getUserOrThrow(Long userId) throws ConditionsException {
         return userRepository.findById(userId)

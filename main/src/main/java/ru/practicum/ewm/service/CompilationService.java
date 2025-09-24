@@ -73,12 +73,6 @@ public class CompilationService {
     }
 
     @Transactional(readOnly = true)
-    public CompilationUpdateDto getEntity(Long compId) {
-        return null;
-        //return mapper.toUpdateDto(findById(compId));
-    }
-
-    @Transactional(readOnly = true)
     public List<CompilationFullDto> find(Boolean pinned, Pageable pageable) {
         var page = (pinned != null)
                 ? repository.findAllByPinned(pinned, pageable)

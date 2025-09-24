@@ -15,8 +15,6 @@ public @interface DateRange {
 
     String message() default "Дата начала не может быть позже даты окончания, и интервал должен быть не менее {minMinutes} минут";
 
-    ;
-
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
