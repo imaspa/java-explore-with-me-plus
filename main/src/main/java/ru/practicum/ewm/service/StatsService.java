@@ -23,14 +23,10 @@ public class StatsService {
 
     public Long getViewsForEvent(Long eventId) {
         String start = LocalDateTime.now().minusDays(1).format(formatter);
-        ;
         String end = LocalDateTime.now().plusDays(1).format(formatter);
-        ;
 
         List<String> uris = List.of("/events/" + eventId);
-
         List<ViewStatsDto> stats = statsClient.getStats(start, end, uris.toArray(new String[0]), true);
-
         return stats.isEmpty() ? 0L : stats.getFirst().getHits();
     }
 
