@@ -32,21 +32,18 @@ public class AdminUserController {
     public List<UserDto> find(
             @RequestParam(required = false) List<Long> ids,
             @PageableDefault(page = 0, size = 10) Pageable pageable) {
-        log.info("Найти пользователей: ids = {}, pagable: {}", ids, pageable);
         return service.findUsers(ids, pageable);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UserDto create(@RequestBody UserDto dto) throws ConflictException {
-        log.info("Создать пользователя: {})", dto);
         return service.create(dto);
     }
 
     @DeleteMapping("/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@Positive @PathVariable Long userId) {
-        log.info("Удалить пользователя id = {}", userId);
         service.delete(userId);
     }
 

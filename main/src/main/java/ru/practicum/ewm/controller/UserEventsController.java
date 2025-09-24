@@ -37,7 +37,6 @@ public class UserEventsController {
             @Positive @PathVariable Long userId,
             @PageableDefault(page = 0, size = 10, sort = "createdOn", direction = Sort.Direction.DESC) Pageable pageable
     ) throws ConditionsException {
-        log.info("Найти events пользователя {}, pagable:{}", userId, pageable);
         return service.findByUserId(userId, pageable);
     }
 
@@ -46,7 +45,6 @@ public class UserEventsController {
     public EventFullDto create(
             @Positive @PathVariable Long userId,
             @RequestBody EventNewDto dto) throws ConditionsException {
-        log.info("Пользователь {} создаёт event {}", userId, dto);
         return service.create(dto, userId);
     }
 
@@ -54,7 +52,6 @@ public class UserEventsController {
     public EventFullDto findByUserIdAndEventId(
             @Positive @PathVariable Long userId,
             @Positive @PathVariable Long eventId) throws ConditionsException {
-        log.info("Пользователь {} ищет event {}", userId, eventId);
         return service.findByUserIdAndEventId(userId, eventId);
     }
 
@@ -63,7 +60,6 @@ public class UserEventsController {
             @Positive @PathVariable Long userId,
             @Positive @PathVariable Long eventId,
             @RequestBody EventUpdateDto dto) throws ConditionsException, ConflictException {
-        log.info("Пользователь {} изменяет event {} {}", userId, eventId, dto);
         return service.update(userId, eventId, dto);
     }
 

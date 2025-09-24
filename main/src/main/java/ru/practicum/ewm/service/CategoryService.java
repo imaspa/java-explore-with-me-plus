@@ -12,12 +12,10 @@ import ru.practicum.ewm.core.exception.NotFoundException;
 import ru.practicum.ewm.dto.category.CategoryDto;
 import ru.practicum.ewm.mapper.CategoryMapper;
 import ru.practicum.ewm.model.Category;
-import ru.practicum.ewm.model.Event;
 import ru.practicum.ewm.repository.CategoryRepository;
 import ru.practicum.ewm.repository.EventRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -56,8 +54,9 @@ public class CategoryService {
             throw new NotFoundException("Удаляемая запись не найдена");
         }
 
-        Optional<Event> eventOpt = eventRepository.findFirstByCategoryId(catId);
-        if (eventOpt.isPresent()) {
+//        Optional<Event> eventOpt = eventRepository.findFirstByCategoryId(catId);
+//        if (eventOpt.isPresent()) {
+        if (eventRepository.existsByCategoryId(catId)) {
             throw new ConflictException("Категория с id = " + catId + " используется");
         }
         repository.deleteById(catId);

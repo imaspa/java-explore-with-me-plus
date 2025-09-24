@@ -23,13 +23,11 @@ public class CategoryController {
 
     @GetMapping
     public List<CategoryDto> find(@PageableDefault(page = 0, size = 10) Pageable pageable) {
-        log.info("Поиск категорий: {}", pageable);
         return service.find(pageable);
     }
 
     @GetMapping("/{catId}")
     public CategoryDto findById(@Positive @PathVariable Long catId) {
-        log.info("Поиск категории по id = {}", catId);
         return service.getEntity(catId);
     }
 }

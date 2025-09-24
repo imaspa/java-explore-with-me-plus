@@ -15,6 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 public class EventRequestStatusUpdateRequest {
     private List<Long> requestIds;
+
     @NotNull(message = "Статус должен быть заполнен")
     private RequestStatus status;
 }

@@ -26,13 +26,11 @@ public class CompilationController {
     public List<CompilationFullDto> find(
             @RequestParam(required = false) Boolean pinned,
             @PageableDefault(page = 0, size = 10) Pageable pageable) {
-        log.info("Получение подборок событий: pinned = {}, {}", pinned, pageable);
         return service.find(pinned, pageable);
     }
 
     @GetMapping("/{compId}")
     public CompilationFullDto findById(@Positive @PathVariable Long compId) {
-        log.info("Получение Подборки событий по id = {}", compId);
         return service.getEntityFool(compId);
     }
 }

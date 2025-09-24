@@ -32,7 +32,6 @@ public class AdminEventController {
     public List<EventFullDto> find(
             @ParameterObject EventsFilter filter,
             @PageableDefault(page = 0, size = 10) Pageable pageable) {
-        log.info("Администратор. Поиск event'ов с фильтром {}; {}", filter, pageable);
         return service.findAdminEventsWithFilter(filter, pageable);
     }
 
@@ -40,7 +39,6 @@ public class AdminEventController {
     public EventFullDto update(
             @Positive @PathVariable Long eventId,
             @RequestBody EventUpdateDto dto) throws ConditionsException, ConflictException {
-        log.info("Администратор изменяет event {} {}", eventId, dto);
         return service.updateAdmin(eventId, dto);
     }
 }

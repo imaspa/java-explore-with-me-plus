@@ -29,16 +29,12 @@ public class EventController {
     public List<EventShortDto> find(
             @ParameterObject EventsFilter filter,
             @PageableDefault(page = 0, size = 10) Pageable pageable, HttpServletRequest request) {
-        log.info("Поиск event'ов с фильтром {}; pagable: {}", filter, pageable);
         return service.findPublicEventsWithFilter(filter, pageable, request);
     }
 
     @GetMapping("/{id}")
     public EventFullDto findById(@PathVariable @Positive Long id, HttpServletRequest request) {
-        log.info("Получение подробной информации об опубликованном событии по eventId {}", id);
-        EventFullDto result = service.findPublicEventById(id, request);
-        log.info("Ответ: {}", result);
-        return result;
+        return service.findPublicEventById(id, request);
     }
 
 }
