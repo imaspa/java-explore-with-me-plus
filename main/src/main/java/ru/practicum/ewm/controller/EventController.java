@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.practicum.ewm.core.exception.ConditionsException;
 import ru.practicum.ewm.dto.event.EventFullDto;
 import ru.practicum.ewm.dto.event.EventShortDto;
 import ru.practicum.ewm.filter.EventsFilter;
@@ -29,10 +28,7 @@ public class EventController {
     @GetMapping
     public List<EventShortDto> find(
             @ParameterObject EventsFilter filter,
-            @PageableDefault(page = 0, size = 10) Pageable pageable
-            , HttpServletRequest request
-    )
-            throws ConditionsException {
+            @PageableDefault(page = 0, size = 10) Pageable pageable, HttpServletRequest request) {
         log.info("Поиск event'ов с фильтром {}; pagable: {}", filter, pageable);
         return service.findPublicEventsWithFilter(filter, pageable, request);
     }
