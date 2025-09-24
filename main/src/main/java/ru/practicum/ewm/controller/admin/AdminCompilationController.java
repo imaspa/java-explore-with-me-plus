@@ -27,14 +27,12 @@ public class AdminCompilationController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CompilationFullDto create(@RequestBody CompilationUpdateDto dto) throws ConditionsException {
-        log.info("Добавление новой подборки : {})", dto);
         return service.create(dto);
     }
 
     @DeleteMapping("/{compId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@Positive @PathVariable Long compId) {
-        log.info("Удаление подборки id = {}", compId);
         service.delete(compId);
     }
 
@@ -42,7 +40,6 @@ public class AdminCompilationController {
     public CompilationFullDto update(
             @Positive @PathVariable Long compId,
             @RequestBody CompilationUpdateDto dto) throws ConditionsException {
-        log.info("Обновление подборки: {} - {})", compId, dto);
         return service.update(compId, dto);
     }
 }

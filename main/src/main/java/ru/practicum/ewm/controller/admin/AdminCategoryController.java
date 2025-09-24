@@ -26,20 +26,17 @@ public class AdminCategoryController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CategoryDto create(@RequestBody CategoryDto dto) throws ConflictException {
-        log.info("Создать категорию : {})", dto);
         return service.create(dto);
     }
 
     @DeleteMapping("/{catId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@Positive @PathVariable Long catId) throws ConflictException {
-        log.info("Удалить категорию id = {}", catId);
         service.delete(catId);
     }
 
     @PatchMapping("/{catId}")
     public CategoryDto update(@Positive @PathVariable Long catId, @RequestBody CategoryDto dto) throws ConflictException {
-        log.info("Изменить категорию: {} - {})", catId, dto);
         return service.update(catId, dto);
     }
 }

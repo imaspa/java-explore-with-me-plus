@@ -16,6 +16,7 @@ import ru.practicum.ewm.model.User;
 import ru.practicum.ewm.repository.UserRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Slf4j
@@ -60,9 +61,9 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public Boolean isEmailExistsAnotherUser(UserDto userDto) {
-        return userDto.getId() == null
-                ? repository.existsByEmail(userDto.getEmail())
-                : repository.existsByEmailAndIdNot(userDto.getEmail(), userDto.getId());
+        return Optional.ofNullable(userDto.getId())
+                .map(id -> repository.existsByEmailAndIdNot(userDto.getEmail(), id))
+                .orElseGet(() -> repository.existsByEmail(userDto.getEmail()));
     }
 
     @Transactional(readOnly = true)

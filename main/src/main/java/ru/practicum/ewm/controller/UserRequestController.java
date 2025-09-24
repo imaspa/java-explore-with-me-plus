@@ -31,7 +31,6 @@ public class UserRequestController {
     @GetMapping
     public List<ParticipationRequestDto> findByUser(
             @Positive @PathVariable Long userId) {
-        log.info("Получить все заявки пользователя {}", userId);
         return service.getRequestsByUser(userId);
     }
 
@@ -40,7 +39,6 @@ public class UserRequestController {
     public ParticipationRequestDto create(
             @Positive @PathVariable Long userId,
             @RequestParam Long eventId) throws ConditionsException, ConflictException {
-        log.info("Создать новую заявку пользователя {}, на мероприятие {}", userId, eventId);
         return service.create(userId, eventId);
     }
 
@@ -48,7 +46,6 @@ public class UserRequestController {
     public ParticipationRequestDto cancel(
             @Positive @PathVariable Long userId,
             @Positive @PathVariable Long requestId) throws ConditionsException {
-        log.info("Отмена заявки {} пользователем {}", requestId, userId);
         return service.cancelRequest(userId, requestId);
     }
 }

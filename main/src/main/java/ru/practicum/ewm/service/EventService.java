@@ -87,9 +87,9 @@ public class EventService {
         EventState state = dto.getStateAction() == null ?
                 null :
                 switch (dto.getStateAction()) {
-                    case PUBLISH_EVENT, REJECT_EVENT -> null;
                     case SEND_TO_REVIEW -> EventState.PENDING;
                     case CANCEL_REVIEW -> EventState.CANCELED;
+                    case PUBLISH_EVENT, REJECT_EVENT -> null;
                 };
         event = mapper.toEntityWithUpdateDto(event, dto, category, location, state);
         event = repository.save(event);

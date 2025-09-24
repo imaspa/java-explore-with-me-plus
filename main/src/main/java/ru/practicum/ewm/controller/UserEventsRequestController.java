@@ -30,7 +30,6 @@ public class UserEventsRequestController {
     public List<ParticipationRequestDto> findForEvent(
             @Positive @PathVariable Long userId,
             @Positive @PathVariable Long eventId) throws ConditionsException {
-        log.info("Получение заявок на мероприятие {}", eventId);
         return service.getRequestsForEventOwner(userId, eventId);
     }
 
@@ -39,7 +38,6 @@ public class UserEventsRequestController {
             @Positive @PathVariable Long userId,
             @Positive @PathVariable Long eventId,
             @RequestBody EventRequestStatusUpdateRequest dto) throws ConditionsException, ConflictException {
-        log.info("Изменение статуса заявок на мероприятие {}, пользователем {}", eventId, userId);
         return service.updateRequestStatus(userId, eventId, dto);
     }
 }
