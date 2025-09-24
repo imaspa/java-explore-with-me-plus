@@ -29,10 +29,12 @@ public class EventController {
     @GetMapping
     public List<EventShortDto> find(
             @ParameterObject EventsFilter filter,
-            @PageableDefault(page = 0, size = 10) Pageable pageable)
+            @PageableDefault(page = 0, size = 10) Pageable pageable
+            , HttpServletRequest request
+    )
             throws ConditionsException {
         log.info("Поиск event'ов с фильтром {}; pagable: {}", filter, pageable);
-        return service.findPublicEventsWithFilter(filter, pageable);
+        return service.findPublicEventsWithFilter(filter, pageable, request);
     }
 
     @GetMapping("/{id}")

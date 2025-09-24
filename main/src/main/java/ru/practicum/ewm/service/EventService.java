@@ -12,7 +12,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-import ru.practicum.ewm.constant.EventSort;
 import ru.practicum.ewm.constant.EventState;
 import ru.practicum.ewm.constant.EventStateAction;
 import ru.practicum.ewm.constant.RequestStatus;
@@ -25,7 +24,7 @@ import ru.practicum.ewm.dto.event.EventShortDto;
 import ru.practicum.ewm.dto.event.EventUpdateDto;
 import ru.practicum.ewm.filter.EventsFilter;
 import ru.practicum.ewm.mapper.EventMapper;
-import ru.practicum.ewm.mapper.EventMapperOld;
+import ru.practicum.ewm.mapper.EventMapperDep;
 import ru.practicum.ewm.model.Category;
 import ru.practicum.ewm.model.Event;
 import ru.practicum.ewm.model.Location;
@@ -209,7 +208,7 @@ public class EventService {
 
         return repository.findAllByInitiatorId(userId, pageable)
                 .stream()
-                .map(event -> EventMapperOld.EventToShortDto(
+                .map(event -> EventMapperDep.EventToShortDto(
                         event,
                         getConfirmedRequests(event.getId()),
                         statsService.getViewsForEvent(event.getId())
@@ -222,7 +221,13 @@ public class EventService {
     // ========================
 
     @Transactional(readOnly = true)
-    public List<EventShortDto> findPublicEventsWithFilter(@Valid EventsFilter filter, Pageable pageable) {
+    public List<EventShortDto> findPublicEventsWithFilter(@Valid EventsFilter filter, Pageable pageable, HttpServletRequest request) {
+        statsService.saveHit(
+                "main-service",
+                request.getRequestURI(),
+                request.getRemoteAddr(),
+                LocalDateTime.now()
+        );
         return findEventsWithFilterInternal(
                 filter,
                 pageable,
@@ -230,7 +235,7 @@ public class EventService {
                 (event, viewsMap) -> {
                     String uri = "/events/" + event.getId();
                     Long views = viewsMap.getOrDefault(uri, 0L);
-                    return EventMapperOld.EventToShortDto(event, getConfirmedRequests(event.getId()), views);
+                    return EventMapperDep.EventToShortDto(event, getConfirmedRequests(event.getId()), views);
                 }
         );
     }
@@ -244,7 +249,7 @@ public class EventService {
                 (event, viewsMap) -> {
                     String uri = "/events/" + event.getId();
                     Long views = viewsMap.getOrDefault(uri, 0L);
-                    return EventMapperOld.eventToFullDto(event, getConfirmedRequests(event.getId()), views);
+                    return EventMapperDep.eventToFullDto(event, getConfirmedRequests(event.getId()), views);
                 }
         );
     }
@@ -252,7 +257,7 @@ public class EventService {
     private <T> List<T> findEventsWithFilterInternal(
             EventsFilter filter,
             Pageable pageable,
-            boolean forAdmin,
+            Boolean forAdmin,
             BiFunction<Event, Map<String, Long>, T> mapper) {
 
         BooleanBuilder predicate = EventPredicateBuilder.buildPredicate(filter, forAdmin);
@@ -278,7 +283,6 @@ public class EventService {
         Map<String, Long> viewsUriMap = statsService.getViewsForUris(uris);
         Stream<Event> eventStream = eventsPage.stream();
 
-        // Сортировка — только для публичного режима
 //        if (!forAdmin) {
 //            EventSort sort = getEventSort(pageable);
 //            if (EventSort.VIEWS == sort) {
@@ -300,13 +304,6 @@ public class EventService {
         return result;
     }
 
-    private EventSort getEventSort(Pageable pageable) {
-        try {
-            return EventSort.valueOf(pageable.getSort().toString());
-        } catch (Exception e) {
-            return EventSort.EVENT_DATE;
-        }
-    }
 
     // ========================
     // HELPERS

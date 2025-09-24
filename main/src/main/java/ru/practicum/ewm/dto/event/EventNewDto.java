@@ -1,6 +1,5 @@
 package ru.practicum.ewm.dto.event;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -33,10 +32,6 @@ public class EventNewDto {
     private String description;
 
     @NotNull(message = "Не заполнено поле eventDate")
-    @JsonFormat(shape = JsonFormat.Shape.STRING,
-            pattern = "yyyy-MM-dd HH:mm:ss",
-            timezone = "Europe/Moscow")
-//    @Future(message = "eventDate не может быть раньше текущего времени")
     @FutureBy(
             amount = 2,
             unit = ChronoUnit.HOURS,
@@ -63,8 +58,5 @@ public class EventNewDto {
 
     private EventState state = EventState.PENDING;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING,
-            pattern = "yyyy-MM-dd HH:mm:ss",
-            timezone = "Europe/Moscow")
     private LocalDateTime publishedOn = null;
 }

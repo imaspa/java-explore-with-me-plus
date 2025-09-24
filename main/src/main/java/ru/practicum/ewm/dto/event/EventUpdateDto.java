@@ -1,6 +1,5 @@
 package ru.practicum.ewm.dto.event;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -37,10 +36,6 @@ public class EventUpdateDto implements DateRangeAware {
     private String description;
 
     @Nullable
-    @JsonFormat(shape = JsonFormat.Shape.STRING,
-            pattern = "yyyy-MM-dd HH:mm:ss",
-            timezone = "Europe/Moscow")
-//    @Future(message = "eventDate не может быть раньше текущего времени")
     @FutureBy(
             amount = 2,
             unit = ChronoUnit.HOURS,

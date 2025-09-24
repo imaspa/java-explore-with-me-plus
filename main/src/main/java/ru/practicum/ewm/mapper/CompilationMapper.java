@@ -13,7 +13,7 @@ import ru.practicum.ewm.model.Event;
 
 import java.util.Set;
 
-@Mapper(config = CommonMapperConfiguration.class, uses = {EventMapperOld.class}) //проверить
+@Mapper(config = CommonMapperConfiguration.class, uses = {EventMapperDep.class}) //проверить
 public interface CompilationMapper {
 
     @BeanMapping(ignoreByDefault = true, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
