@@ -33,7 +33,7 @@ public class EventMapperDep {
                 .build();
     }
 
-    public EventShortDto EventToShortDto(Event event, Long confirmedRequests, Long views) {
+    public EventShortDto eventToShortDto(Event event, Long confirmedRequests, Long views) {
         return EventShortDto.builder()
                 .id(event.getId())
                 .annotation(event.getAnnotation())

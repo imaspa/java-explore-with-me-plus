@@ -196,7 +196,7 @@ public class EventService {
 
         return repository.findAllByInitiatorId(userId, pageable)
                 .stream()
-                .map(event -> EventMapperDep.EventToShortDto(
+                .map(event -> EventMapperDep.eventToShortDto(
                         event,
                         getConfirmedRequests(event.getId()),
                         statsService.getViewsForEvent(event.getId())
@@ -219,7 +219,7 @@ public class EventService {
                 (event, viewsMap) -> {
                     String uri = "/events/" + event.getId();
                     Long views = viewsMap.getOrDefault(uri, 0L);
-                    return EventMapperDep.EventToShortDto(event, getConfirmedRequests(event.getId()), views);
+                    return EventMapperDep.eventToShortDto(event, getConfirmedRequests(event.getId()), views);
                 }
         );
     }
