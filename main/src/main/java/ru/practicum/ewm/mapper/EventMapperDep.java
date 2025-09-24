@@ -1,42 +1,16 @@
 package ru.practicum.ewm.mapper;
 
 import lombok.experimental.UtilityClass;
-import ru.practicum.ewm.constant.EventState;
 import ru.practicum.ewm.dto.event.EventFullDto;
-import ru.practicum.ewm.dto.event.EventNewDto;
 import ru.practicum.ewm.dto.event.EventShortDto;
-import ru.practicum.ewm.model.Category;
 import ru.practicum.ewm.model.Event;
-import ru.practicum.ewm.model.Location;
-import ru.practicum.ewm.model.User;
-
-import java.time.LocalDateTime;
 
 @UtilityClass
-public class EventMapperOld {
+public class EventMapperDep {
     private final CategoryMapper categoryMapper = new CategoryMapperImpl();
 
     private final UserMapper usermapper = new UserMapperImpl();
     private final LocationMapper locationMapper = new LocationMapperImpl();
-
-    public Event newDtoToEvent(EventNewDto newEventDto, User user, Category category, Location location, EventState state,
-                               LocalDateTime publishedOn) {
-        return Event.builder()
-                .annotation(newEventDto.getAnnotation())
-                .category(category)
-                .createdOn(LocalDateTime.now())
-                .description(newEventDto.getDescription())
-                .eventDate(newEventDto.getEventDate())
-                .initiator(user)
-                .location(location)
-                .paid(newEventDto.getPaid())
-                .participantLimit(newEventDto.getParticipantLimit())
-                .publishedOn(publishedOn)
-                .requestModeration(newEventDto.getRequestModeration())
-                .state(state)
-                .title(newEventDto.getTitle())
-                .build();
-    }
 
     public EventFullDto eventToFullDto(Event event, Long confirmedRequests, Long views) {
         return EventFullDto.builder()

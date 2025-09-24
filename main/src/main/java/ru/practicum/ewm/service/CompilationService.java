@@ -10,6 +10,7 @@ import org.springframework.validation.annotation.Validated;
 import ru.practicum.ewm.core.exception.ConditionsException;
 import ru.practicum.ewm.core.exception.NotFoundException;
 import ru.practicum.ewm.core.interfaceValidation.CreateValidation;
+import ru.practicum.ewm.core.interfaceValidation.UpdateValidation;
 import ru.practicum.ewm.dto.compilation.CompilationFullDto;
 import ru.practicum.ewm.dto.compilation.CompilationUpdateDto;
 import ru.practicum.ewm.mapper.CompilationMapper;
@@ -36,7 +37,8 @@ public class CompilationService {
 
 
     @Transactional
-    public CompilationFullDto create(@Validated(CreateValidation.class) CompilationUpdateDto dto) throws ConditionsException {
+    @Validated(CreateValidation.class)
+    public CompilationFullDto create(@Valid CompilationUpdateDto dto) throws ConditionsException {
         Set<Event> events = new HashSet<>(getUniqueEvents(dto.getEvents()));
         Compilation compilation = repository.save(mapper.toEntity(dto, events));
         log.info("Создана подборка, id = {}", compilation.getId());
@@ -54,6 +56,7 @@ public class CompilationService {
 
 
     @Transactional
+    @Validated(UpdateValidation.class)
     public CompilationFullDto update(Long compId, @Valid CompilationUpdateDto dto) throws ConditionsException {
         var compilation = findById(compId);
 
