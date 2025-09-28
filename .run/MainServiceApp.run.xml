@@ -1,13 +1,13 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="StatsServiceApp" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" activateToolWindowBeforeRun="false" nameIsGenerated="true">
+  <configuration default="false" name="MainServiceApp" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
     <envs>
+      <env name="CLIENT_URL" value="http://localhost:9090" />
       <env name="SPRING_DATASOURCE_PASSWORD" value="100" />
-      <env name="SPRING_DATASOURCE_URL" value="jdbc:postgresql://localhost:5433/stats-db" />
+      <env name="SPRING_DATASOURCE_URL" value="jdbc:postgresql://localhost:5434/main-db" />
       <env name="SPRING_DATASOURCE_USERNAME" value="admin" />
     </envs>
-    <option name="INCLUDE_PROVIDED_SCOPE" value="false" />
-    <module name="stats-server" />
-    <option name="SPRING_BOOT_MAIN_CLASS" value="ru.practicum.ewm.StatsServiceApp" />
+    <module name="main" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="ru.practicum.ewm.MainServiceApp" />
     <extension name="com.github.linuxchina.dotenvx.run.configuration.IdeaRunConfigurationExtension">
       <option name="DOTENVX_ENABLED" value="false" />
       <option name="ENV_FILE" value=".env" />
