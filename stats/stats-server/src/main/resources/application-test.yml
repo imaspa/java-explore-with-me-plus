@@ -15,8 +15,8 @@ spring:
       path: /h2-console
 
   jpa:
-    #    hibernate:
-    #      ddl-auto: create-drop
+    # hibernate:
+    # ddl-auto: create-drop
 
     properties:
       hibernate.format_sql: true

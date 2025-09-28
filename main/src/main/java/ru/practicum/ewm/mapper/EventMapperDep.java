@@ -1,9 +1,12 @@
 package ru.practicum.ewm.mapper;
 
 import lombok.experimental.UtilityClass;
+import ru.practicum.ewm.dto.comment.CommentDto;
 import ru.practicum.ewm.dto.event.EventFullDto;
 import ru.practicum.ewm.dto.event.EventShortDto;
 import ru.practicum.ewm.model.Event;
+
+import java.util.List;
 
 @UtilityClass
 public class EventMapperDep {
@@ -12,7 +15,7 @@ public class EventMapperDep {
     private final UserMapper usermapper = new UserMapperImpl();
     private final LocationMapper locationMapper = new LocationMapperImpl();
 
-    public EventFullDto eventToFullDto(Event event, Long confirmedRequests, Long views) {
+    public EventFullDto eventToFullDto(Event event, Long confirmedRequests, Long views, List<CommentDto> comments) {
         return EventFullDto.builder()
                 .id(event.getId())
                 .annotation(event.getAnnotation())
@@ -30,6 +33,7 @@ public class EventMapperDep {
                 .state(event.getState())
                 .title(event.getTitle())
                 .views(views)
+                .comments(comments)
                 .build();
     }
 
