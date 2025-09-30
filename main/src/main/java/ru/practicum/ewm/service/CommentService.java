@@ -1,14 +1,17 @@
 package ru.practicum.ewm.service;
 
+import jakarta.validation.Valid;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 import ru.practicum.ewm.core.exception.ConditionsException;
 import ru.practicum.ewm.core.exception.NotFoundException;
 import ru.practicum.ewm.dto.comment.CommentDto;
 import ru.practicum.ewm.dto.comment.NewCommentDto;
 import ru.practicum.ewm.dto.comment.UpdateCommentDto;
+import ru.practicum.ewm.dto.comment.CommentStatusDto;
 import ru.practicum.ewm.mapper.CommentMapper;
 import ru.practicum.ewm.model.Comment;
 import ru.practicum.ewm.model.Event;
@@ -24,6 +27,7 @@ import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
+@Validated
 @Slf4j
 public class CommentService {
     private final CommentRepository commentRepository;
@@ -37,7 +41,7 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentDto create(NewCommentDto entity, Long userId) throws ConditionsException {
+    public CommentDto create(@Valid NewCommentDto entity, Long userId) throws ConditionsException {
         var comment = Comment.builder()
                 .author(getUserOrThrow(userId))
                 .event(getEventOrThrow(entity.getEventId()))
@@ -52,15 +56,14 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentDto update(UpdateCommentDto entity, Long userId, Long id) throws ConditionsException {
+    public CommentDto update(@Valid UpdateCommentDto dto, Long userId, Long id) throws ConditionsException {
         var comment = getCommentOrThrow(id);
 
         if (!comment.getAuthor().getId().equals(userId)) {
             throw new ConditionsException("Вы не можете редактировать данный комментарий.");
         }
 
-        comment.setText(entity.getText());
-        comment.setUpdated(LocalDateTime.now());
+        commentMapper.updateEntityFromDto(dto, comment);
 
         log.info("Обновление комментария к событию с id={} пользователем с id {}", comment.getEvent().getId(), userId);
         return commentMapper.toDto(comment);
@@ -74,7 +77,12 @@ public class CommentService {
             throw new ConditionsException("Вы не можете удалить данный комментарий.");
         }
 
-        comment.setDeleted(true);
+        var dto = CommentStatusDto.builder()
+                .deleted(true)
+                .build();
+
+        commentMapper.updateStatus(comment, dto);
+
         log.info("Комментарий с id={} удалён пользователем с id={}", id, userId);
     }
 
