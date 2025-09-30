@@ -1,10 +1,13 @@
 package ru.practicum.ewm.mapper;
 
-import org.mapstruct.*;
+import org.mapstruct.BeanMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 import ru.practicum.ewm.core.config.CommonMapperConfiguration;
 import ru.practicum.ewm.dto.comment.CommentDto;
-import ru.practicum.ewm.dto.comment.UpdateCommentDto;
-import ru.practicum.ewm.dto.comment.CommentStatusDto;
+import ru.practicum.ewm.dto.comment.CommentUpdateDto;
 import ru.practicum.ewm.model.Comment;
 
 @Mapper(config = CommonMapperConfiguration.class)
@@ -14,14 +17,10 @@ public interface CommentMapper {
     @Mapping(target = "event", source = "event.id")
     CommentDto toDto(Comment entity);
 
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "author", ignore = true)
-    @Mapping(target = "event", ignore = true)
-    @Mapping(target = "created", ignore = true)
+    @BeanMapping(ignoreByDefault = true, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "updated", expression = "java(java.time.LocalDateTime.now())")
-    void updateEntityFromDto(UpdateCommentDto dto, @MappingTarget Comment entity);
+    @Mapping(target = "text", source = "dto.text")
+    @Mapping(target = "deleted", source = "dto.deleted")
+    Comment mapEntityFromDto(@MappingTarget Comment entity, CommentUpdateDto dto);
 
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void updateStatus(@MappingTarget Comment target, CommentStatusDto source);
 }

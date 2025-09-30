@@ -17,9 +17,13 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EventFullDto {
+
     private Long id;
+
     private String annotation;
+
     private CategoryDto category;
+
     private Long confirmedRequests;
 
     private LocalDateTime createdOn;
@@ -29,13 +33,22 @@ public class EventFullDto {
     private LocalDateTime eventDate;
 
     private UserDto initiator;
+
     private EventLocationDto location;
+
     private Boolean paid;
+
     private Long participantLimit;
+
     private LocalDateTime publishedOn;
+
     private Boolean requestModeration;
+
     private EventState state;
+
     private String title;
+
     private Long views;
+
     private List<CommentDto> comments;
 }

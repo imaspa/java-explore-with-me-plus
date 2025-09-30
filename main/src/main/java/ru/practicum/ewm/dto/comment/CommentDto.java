@@ -14,9 +14,14 @@ import java.time.LocalDateTime;
 public class CommentDto {
 
     private Long id;
+
     private String authorName;
+
     private Long event;
+
     private String text;
+
     private LocalDateTime created;
+
     private LocalDateTime updated;
 }

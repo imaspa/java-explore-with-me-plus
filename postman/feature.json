@@ -1,10 +1,9 @@
 {
   "info": {
-    "_postman_id": "fb7f493c-2731-470f-b61c-b492b069bb6e",
+    "_postman_id": "9e86bbb5-00c4-410b-ac4e-896a4f977076",
     "name": "Test Explore With Me - Feature",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "44847328",
-    "_collection_link": "https://aleksandr-5917857.postman.co/workspace/1dfcd725-759b-44c5-89f7-4b49d2e6c861/collection/44847328-fb7f493c-2731-470f-b61c-b492b069bb6e?action=share&source=collection_link&creator=44847328"
+    "_exporter_id": "4008780"
   },
   "item": [
     {
@@ -108,7 +107,7 @@
           },
           {
             "key": "X-User-Id",
-            "value": "{{uid}}",
+            "value": "{{newUid}}",
             "type": "text"
           }
         ],
@@ -259,7 +258,7 @@
           },
           {
             "key": "X-User-Id",
-            "value": "{{uid}}",
+            "value": "{{newUid}}",
             "type": "text"
           }
         ],
@@ -503,11 +502,11 @@
   "variable": [
     {
       "key": "baseUrl",
-      "value": ""
+      "value": "http://localhost:8080"
     },
     {
-      "key": "uid",
-      "value": ""
+      "key": "uri",
+      "value": "1"
     },
     {
       "key": "eid",
@@ -515,8 +514,7 @@
     },
     {
       "key": "commentId",
-      "value": "",
-      "type": "default"
+      "value": ""
     },
     {
       "key": "commentText",
