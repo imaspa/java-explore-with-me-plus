@@ -1,17 +1,17 @@
 package ru.practicum.ewm.service;
 
 import jakarta.validation.Valid;
-import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import ru.practicum.ewm.core.exception.ConditionsException;
 import ru.practicum.ewm.core.exception.NotFoundException;
+import ru.practicum.ewm.core.interfaceValidation.CreateValidation;
+import ru.practicum.ewm.core.interfaceValidation.UpdateValidation;
 import ru.practicum.ewm.dto.comment.CommentDto;
-import ru.practicum.ewm.dto.comment.NewCommentDto;
-import ru.practicum.ewm.dto.comment.UpdateCommentDto;
-import ru.practicum.ewm.dto.comment.CommentStatusDto;
+import ru.practicum.ewm.dto.comment.CommentUpdateDto;
 import ru.practicum.ewm.mapper.CommentMapper;
 import ru.practicum.ewm.model.Comment;
 import ru.practicum.ewm.model.Event;
@@ -36,12 +36,13 @@ public class CommentService {
     private final CommentMapper commentMapper;
 
     @Transactional(readOnly = true)
-    public CommentDto findById(long id) throws ConditionsException {
+    public CommentDto findById(Long id) throws ConditionsException {
         return commentMapper.toDto(getCommentOrThrow(id));
     }
 
     @Transactional
-    public CommentDto create(@Valid NewCommentDto entity, Long userId) throws ConditionsException {
+    @Validated(CreateValidation.class)
+    public CommentDto create(@Valid CommentUpdateDto entity, Long userId) throws ConditionsException {
         var comment = Comment.builder()
                 .author(getUserOrThrow(userId))
                 .event(getEventOrThrow(entity.getEventId()))
@@ -50,49 +51,29 @@ public class CommentService {
                 .created(LocalDateTime.now())
                 .updated(LocalDateTime.now())
                 .build();
-
         log.info("Создание нового комментария к событию с id={} пользователем с id={}", entity.getEventId(), userId);
         return commentMapper.toDto(commentRepository.save(comment));
     }
 
     @Transactional
-    public CommentDto update(@Valid UpdateCommentDto dto, Long userId, Long id) throws ConditionsException {
-        var comment = getCommentOrThrow(id);
-
-        if (!comment.getAuthor().getId().equals(userId)) {
-            throw new ConditionsException("Вы не можете редактировать данный комментарий.");
+    @Validated(UpdateValidation.class)
+    public CommentDto update(@Valid CommentUpdateDto dto, Long commentId, Long userId) throws ConditionsException {
+        var comment = getCommentOrThrow(commentId);
+        if (!dto.getIsAdmin() && !isAuthorComment(comment.getAuthor(), userId)) {
+            throw new ConditionsException("Вы не можете редактировать данный комментарий");
         }
-
-        commentMapper.updateEntityFromDto(dto, comment);
-
+        comment = commentMapper.mapEntityFromDto(comment, dto);
         log.info("Обновление комментария к событию с id={} пользователем с id {}", comment.getEvent().getId(), userId);
-        return commentMapper.toDto(comment);
+        return commentMapper.toDto(commentRepository.save(comment));
     }
 
-    @Transactional
-    public void deleteById(Long id, Long userId) throws ConditionsException {
-        var comment = getCommentOrThrow(id);
-
-        if (!Objects.equals(comment.getAuthor().getId(), userId)) {
-            throw new ConditionsException("Вы не можете удалить данный комментарий.");
+    private boolean isAuthorComment(User author, Long userId) {
+        if (userId == null || author == null) {
+            return false;
         }
-
-        var dto = CommentStatusDto.builder()
-                .deleted(true)
-                .build();
-
-        commentMapper.updateStatus(comment, dto);
-
-        log.info("Комментарий с id={} удалён пользователем с id={}", id, userId);
+        return Objects.equals(author.getId(), userId);
     }
 
-    @Transactional
-    public void deleteCommentAsAdmin(Long id) {
-        var comment = getCommentOrThrow(id);
-
-        comment.setDeleted(true);
-        log.info("Комментарий с id={} удалён администратором.", id);
-    }
 
 
     @Transactional(readOnly = true)
