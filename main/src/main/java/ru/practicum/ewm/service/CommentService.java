@@ -67,13 +67,27 @@ public class CommentService {
         return commentMapper.toDto(commentRepository.save(comment));
     }
 
+    @Transactional
+    public void delete(Long commentId, Long userId) throws ConditionsException {
+        CommentUpdateDto dto = CommentUpdateDto.builder().deleted(true).build();
+        update(dto, commentId, userId);
+    }
+
+    @Transactional
+    public void deleteAdmin(Long commentId) throws ConditionsException {
+        CommentUpdateDto dto = CommentUpdateDto.builder()
+                .deleted(true)
+                .isAdmin(true)
+                .build();
+        update(dto, commentId, null);
+    }
+
     private boolean isAuthorComment(User author, Long userId) {
         if (userId == null || author == null) {
             return false;
         }
         return Objects.equals(author.getId(), userId);
     }
-
 
 
     @Transactional(readOnly = true)
