@@ -24,7 +24,7 @@ public class CommentUpdateDto {
             groups = {CreateValidation.class, UpdateValidation.class})
     private String text;
 
-    Boolean deleted = false;
+    private Boolean deleted = false;
 
-    Boolean isAdmin = false;
+    private Boolean isAdmin = false;
 }

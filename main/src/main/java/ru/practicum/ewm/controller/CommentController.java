@@ -51,7 +51,6 @@ public class CommentController {
     public void delete(
             @PathVariable Long commentId,
             @RequestHeader("X-User-Id") Long userId) throws ConditionsException {
-        CommentUpdateDto dto = CommentUpdateDto.builder().deleted(true).build();
-        commentService.update(dto, commentId, userId);
+        commentService.delete(commentId, userId);
     }
 }
