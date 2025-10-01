@@ -18,6 +18,7 @@ import ru.practicum.ewm.constant.RequestStatus;
 import ru.practicum.ewm.core.exception.ConditionsException;
 import ru.practicum.ewm.core.exception.ConflictException;
 import ru.practicum.ewm.core.exception.NotFoundException;
+import ru.practicum.ewm.dto.comment.CommentDto;
 import ru.practicum.ewm.dto.event.EventFullDto;
 import ru.practicum.ewm.dto.event.EventNewDto;
 import ru.practicum.ewm.dto.event.EventShortDto;
@@ -57,6 +58,7 @@ public class EventService {
     private final CategoryRepository categoryRepository;
     private final RequestRepository requestRepository;
     private final StatsService statsService;
+    private final CommentService commentService;
 
     @Transactional
     public EventFullDto create(@Valid EventNewDto dto, Long userId) throws ConditionsException {
@@ -100,6 +102,7 @@ public class EventService {
         return mapper.toDto(event).toBuilder()
                 .confirmedRequests(calcConfirmedRequests)
                 .views(calcView)
+                .comments(getComments(eventId))
                 .build();
     }
 
@@ -148,6 +151,7 @@ public class EventService {
         return mapper.toDto(event).toBuilder()
                 .confirmedRequests(calcConfirmedRequests)
                 .views(calcView)
+                .comments(getComments(eventId))
                 .build();
 
     }
@@ -164,6 +168,7 @@ public class EventService {
         return mapper.toDto(event).toBuilder()
                 .confirmedRequests(calcConfirmedRequests)
                 .views(calcView)
+                .comments(getComments(eventId))
                 .build();
 
     }
@@ -185,6 +190,7 @@ public class EventService {
         return mapper.toDto(event).toBuilder()
                 .confirmedRequests(calcConfirmedRequests)
                 .views(calcView)
+                .comments(getComments(eventId))
                 .build();
     }
 
@@ -233,7 +239,8 @@ public class EventService {
                 (event, viewsMap) -> {
                     String uri = "/events/" + event.getId();
                     Long views = viewsMap.getOrDefault(uri, 0L);
-                    return EventMapperDep.eventToFullDto(event, getConfirmedRequests(event.getId()), views);
+                    return EventMapperDep.eventToFullDto(event, getConfirmedRequests(event.getId()), views,
+                            getComments(event.getId()));
                 }
         );
     }
@@ -307,6 +314,10 @@ public class EventService {
 
     private Long getConfirmedRequests(Long eventId) {
         return requestRepository.countByEventIdAndStatus(eventId, RequestStatus.CONFIRMED);
+    }
+
+    private List<CommentDto> getComments(Long eventId) {
+        return commentService.findAllCommentsForEvent(eventId);
     }
 
     @Transactional(readOnly = true)
